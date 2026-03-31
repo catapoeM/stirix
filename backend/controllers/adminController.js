@@ -1,4 +1,60 @@
 import Article from "../models/Article.js";
+import User from "../models/User.js";
+
+/**
+ * @desc Promote user to admin
+ * @route PUT /api/admin/users/:id/promote
+ * @access OWNER ONLY
+ */
+
+const promoteToAdmin = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({error: "User not found"})
+        }
+
+        user.role = "admin";
+        await user.save();
+
+        res.json({
+            message: "User promoted to admin",
+            user,
+        })
+    }   catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
+
+/**
+ * @desc Demote admin to user
+ * @route PUT /api/admin/users/:id/demote
+ * @access OWNER ONLY
+ */
+const demoteToUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        user.role = "user";
+        await user.save();
+
+        res.json({
+            message: "User demoted to user",
+            user,
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 /**
  * @desc    Get all articles that are waiting for approval
@@ -74,4 +130,4 @@ const rejectArticle = async (req, res) => {
     }
 };
 
-export {getPendingArticles, approveArticle, rejectArticle}
+export {promoteToAdmin, demoteToUser, getPendingArticles, approveArticle, rejectArticle}

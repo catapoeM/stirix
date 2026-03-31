@@ -26,13 +26,13 @@ const auth = (roles = []) => {
             // 2. Verify and decode token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
-            // 3. Check user role (if roles are specified)
-            if (roles.length && !roles.includes(decoded.role)) {
-                return res.status(403).json({ error: "Access denied" });
-            }
-
-            // 4. Attach user data to request
+            // 3. Attach user data to request
             req.user = decoded;
+
+            // 4. Check user role (if roles are specified)
+            if (roles.length && !roles.includes(req.user.role)) {
+                return res.status(403).json({ error: "Forbidden" });
+            }
 
             // 5. Continue to next middleware / route
             next();
