@@ -1,5 +1,7 @@
 import express from "express";
 import { register, login } from "../controllers/authController.js";
+import validateRequest from "../middleware/validateRequest.js";
+import { registerValidator, loginValidator } from "../validators/authValidator.js";
 
 const router = express.Router();
 
@@ -8,13 +10,21 @@ const router = express.Router();
  * @desc    Register a new user
  * @access  Public
  */
-router.post("/register", register);
+router.post("/register", 
+    registerValidator,
+    validateRequest,
+    register
+);
 
 /**
  * @route   POST /api/auth/login
  * @desc    Login user and return JWT
  * @access  Public
  */
-router.post("/login", login);
+router.post("/login", 
+    loginValidator,
+    validateRequest,
+    login
+);
 
 export default router;

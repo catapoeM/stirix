@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const ArticleSchema = new mongoose.Schema({
     title: { type: String, required: true, maxlength: 80 },
     content: { type: String, required: true, minlength: 100, maxlength: 1000 },
-    category: String,
-    author: String,
+    category: String, // football
+    imageUrl: String,
+    author: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     status: { type: String, enum: ["pending", "approved"], default: "pending"},
     createdAt: {type: Date, default: Date.now},
 })
