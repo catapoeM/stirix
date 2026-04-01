@@ -9,6 +9,9 @@ import {
     deleteArticle,
 } from "../controllers/articleController.js";
 
+import { createArticleValidator } from "../validators/articleValidator.js";
+import validateRequest from "../middleware/validateRequest.js";
+
 // Import auth middleware
 import auth from "../middleware/authMiddleware.js";
 
@@ -33,7 +36,11 @@ router.get("/:id", getArticleById);
  * @desc    Create new article
  * @access  Private (logged-in users)
  */
-router.post("/", auth(), createArticle);
+router.post("/", auth(),
+    createArticleValidator,
+    validateRequest,
+    createArticle
+);
 
 /**
  * @route   PUT /api/articles/:id

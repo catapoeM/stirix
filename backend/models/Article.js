@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 const ArticleSchema = new mongoose.Schema({
-    title: { type: String, required: true, maxlength: 80 },
+    title: { type: String, required: true, minlength: 5, maxlength: 80 },
     content: { type: String, required: true, minlength: 100, maxlength: 1000 },
     category: String, // football
     imageUrl: String,
+    summary: {type: String, required: false, minlength: 150, maxlength: 300},
     author: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     status: { type: String, enum: ["pending", "approved"], default: "pending"},
     createdAt: {type: Date, default: Date.now},
