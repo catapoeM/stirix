@@ -5,8 +5,8 @@ const createArticleValidator = [
   body("title")
     .notEmpty()
     .withMessage("Title is required")
-    .isLength({ min: 5, max: 80 })
-    .withMessage("Title must be between 5 and 80 characters")
+    .isLength({ min: 4, max: 80 })
+    .withMessage("Title must be between 4 and 80 characters")
     .trim(),
 
   // 🔹 CONTENT

@@ -20,6 +20,32 @@ const getApprovedArticles = async (req, res) => {
 };
 
 /**
+ * @desc    Get all of my articles by createdAt
+ * @route   GET /api/articles/myArticles
+ * @access  Private
+ */
+const getMyArticles = async (req, res) => {
+    try {
+        const authorId = req.user.id;
+
+        // Find article by ID
+        const articles = await Article.find({
+            author: authorId,
+
+        }).sort({ createdAt: -1 })
+
+        // If article does not exist
+        if (!articles) {
+            return res.status(404).json({ error: "Articles not found" });
+        }
+
+        res.json(articles);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+/**
  * @desc    Get a single article by ID
  * @route   GET /api/articles/:id
  * @access  Public
@@ -83,61 +109,11 @@ const createArticle = async (req, res) => {
 };
 
 /**
- * @desc    Update an article (optional feature)
+ * @desc    Hide an article (Soft delete)
  * @route   PUT /api/articles/:id
  * @access  Private (author or admin)
  */
-const updateArticle = async (req, res) => {
-    try {
-        const articleId = req.params.id;
-        const { title, content, category } = req.body;
-
-        // Find article
-        const article = await Article.findById(articleId);
-
-        if (!article) {
-            return res.status(404).json({ error: "Article not found" });
-        }
-
-        // Check if user is the author OR admin
-        if (
-            article.author !== req.user.id &&
-            req.user.role !== "admin"
-        ) {
-            return res.status(403).json({ error: "Not allowed" });
-        }
-
-        // Update fields if provided
-        if (title){
-            article.title = title;
-        } 
-        if (content) {
-            article.content = content;
-        }
-        if (category) {
-            article.category = category;
-        } 
-
-        // Optional: reset status to pending after edit
-        article.status = "pending";
-
-        await article.save();
-
-        res.json({
-            message: "Article updated and sent for re-approval",
-            article,
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-/**
- * @desc    Delete an article
- * @route   DELETE /api/articles/:id
- * @access  Private (author or admin)
- */
-const deleteArticle = async (req, res) => {
+const hideArticle = async (req, res) => {
     try {
         const articleId = req.params.id;
 
@@ -149,22 +125,23 @@ const deleteArticle = async (req, res) => {
         }
 
         // Check ownership or admin
+
         if (
-            article.author !== req.user.id &&
-            req.user.role !== "admin"
+            article.author.toString() !== req.user.id && req.user.role !== "admin"
         ) {
             return res.status(403).json({ error: "Not allowed" });
         }
 
-        // Delete article
-        await Article.findByIdAndDelete(articleId);
+        // Hide article
+        article.status = "hidden";
+        await article.save();
 
         res.json({
-            message: "Article deleted successfully",
+            message: "Article hidden successfully",
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-export {getApprovedArticles, getArticleById, createArticle, updateArticle, deleteArticle}
+export {getApprovedArticles, getMyArticles, getArticleById, createArticle, hideArticle}

@@ -3,10 +3,10 @@ import express from "express";
 // Import controller functions
 import {
     getApprovedArticles,
+    getMyArticles,
     getArticleById,
     createArticle,
-    updateArticle,
-    deleteArticle,
+    hideArticle,
 } from "../controllers/articleController.js";
 
 import { createArticleValidator } from "../validators/articleValidator.js";
@@ -25,6 +25,16 @@ const router = express.Router();
 router.get("/", getApprovedArticles);
 
 /**
+ * @route   GET /api/getMyArticles/
+ * @desc    Get all my articles by date
+ * @access  Private (only if I am the user - checked in controller)
+ */
+router.get("/myArticles", 
+    auth(),
+    getMyArticles
+);
+
+/**
  * @route   GET /api/articles/:id
  * @desc    Get single article by ID
  * @access  Public (only if approved - checked in controller)
@@ -32,28 +42,24 @@ router.get("/", getApprovedArticles);
 router.get("/:id", getArticleById);
 
 /**
- * @route   POST /api/articles
+ * @route   POST /api/articles/create
  * @desc    Create new article
  * @access  Private (logged-in users)
  */
-router.post("/", auth(),
+router.post("/create", auth(),
     createArticleValidator,
     validateRequest,
     createArticle
 );
 
 /**
- * @route   PUT /api/articles/:id
- * @desc    Update an article
+ * @route   PATCH /api/articles/:id/hide
+ * @desc    Hide an article
  * @access  Private (author or admin)
  */
-router.put("/:id", auth(), updateArticle);
-
-/**
- * @route   DELETE /api/articles/:id
- * @desc    Delete an article
- * @access  Private (author or admin)
- */
-router.delete("/:id", auth(), deleteArticle);
+router.patch("/:id/hide", 
+    auth(), 
+    hideArticle
+);
 
 export default router;

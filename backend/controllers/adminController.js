@@ -76,6 +76,25 @@ const getPendingArticles = async (req, res) => {
 };
 
 /**
+ * @desc    Get all articles
+ * @route   GET /api/admin/articles/allArticles
+ * @access  Admin only
+ */
+const getAllArticles = async (req, res) => {
+    try {
+        // Find all articles
+        const articles = await Article.find()
+        .sort({ createdAt: -1 }); // newest first
+
+        // Return the list of all articles
+        res.json(articles);
+    } catch (err) {
+        // Handle unexpected errors
+        res.status(500).json({ error: err.message });
+    }
+};
+
+/**
  * @desc    Approve an article
  * @route   PUT /api/admin/articles/:id/approve
  * @access  Admin only
@@ -130,4 +149,4 @@ const rejectArticle = async (req, res) => {
     }
 };
 
-export {promoteToAdmin, demoteToUser, getPendingArticles, approveArticle, rejectArticle}
+export {promoteToAdmin, demoteToUser, getAllArticles, getPendingArticles, approveArticle, rejectArticle}
