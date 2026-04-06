@@ -4,16 +4,18 @@ const registerValidator = [
   // Username
   body("username")
     .trim()
-    .isLength({ min: 3 })
-    .withMessage("Username must be at least 3 characters"),
-  
-  body("username")
+    .isLength({ min: 3, max: 20 })
+    .withMessage("Username must be at least 3 characters and maximum of 20")
     .isAlphanumeric()
-    .withMessage("Username must contain only letters and numbers"),
+    .withMessage("Username must contain only letters and numbers")
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage("Username can contain only letters, numbers and underscore"),
+    
   // Email
   body("email")
     .isEmail()
-    .withMessage("Invalid email format"),
+    .withMessage("Invalid email format")
+    .normalizeEmail(),
 
   // Password
   body("password")

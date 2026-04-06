@@ -7,7 +7,8 @@ const createArticleValidator = [
     .withMessage("Title is required")
     .isLength({ min: 4, max: 80 })
     .withMessage("Title must be between 4 and 80 characters")
-    .trim(),
+    .trim()
+    .escape(),
 
   // 🔹 CONTENT
   body("content")
@@ -15,7 +16,8 @@ const createArticleValidator = [
     .withMessage("Content is required")
     .isLength({ min: 100, max: 1000 })
     .withMessage("Content must be at least 100 characters long and maximum of 1000")
-    .trim(),
+    .trim()
+    .escape(),
 
   // 🔹 IMAGE (optional but validated if exists)
   body("imageUrl")
@@ -35,7 +37,8 @@ const createArticleValidator = [
     .optional()
     .isLength({ min: 50, max: 300 })
     .withMessage("Summary cannot exceed 300 characters")
-    .trim(),
+    .trim()
+    .escape(),
 ];
 
 export {createArticleValidator}

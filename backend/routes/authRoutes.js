@@ -2,6 +2,7 @@ import express from "express";
 import { register, login } from "../controllers/authController.js";
 import validateRequest from "../middleware/validateRequest.js";
 import { registerValidator, loginValidator } from "../validators/authValidator.js";
+import { authLimiter } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ const router = express.Router();
  * @access  Public
  */
 router.post("/register", 
+    authLimiter,
     registerValidator,
     validateRequest,
     register

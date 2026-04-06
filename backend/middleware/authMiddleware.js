@@ -1,4 +1,22 @@
 import jwt from "jsonwebtoken"
+import rateLimit from "express-rate-limit"
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 50, // max request per IP
+  message: {
+    error: "Too many requests. Please try again later.",
+  },
+})
+
+// Limit for creating articles
+const articleLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 10,
+  message: {
+    error: "Too many articles created. Slow down.",
+  },
+});
 
 // This function returns a middleware
 // "roles" = array of allowed roles (e.g. ["admin"])
@@ -42,4 +60,4 @@ const auth = (roles = []) => {
     };
 };
 
-export default auth
+export {auth, authLimiter, articleLimiter}

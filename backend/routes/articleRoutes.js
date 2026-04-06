@@ -14,7 +14,7 @@ import { createArticleValidator } from "../validators/articleValidator.js";
 import validateRequest from "../middleware/validateRequest.js";
 
 // Import auth middleware
-import auth from "../middleware/authMiddleware.js";
+import {articleLimiter, auth} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -60,7 +60,9 @@ router.get("/my/:id",
  * @desc    Create new article
  * @access  Private (logged-in users)
  */
-router.post("/create", auth(),
+router.post("/create", 
+    auth(),
+    articleLimiter,
     createArticleValidator,
     validateRequest,
     createArticle
