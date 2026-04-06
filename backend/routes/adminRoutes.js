@@ -50,21 +50,22 @@ router.get("/allArticles",
   auth(["admin"]), 
   getAllArticles
 );
+
 /**
- * @route   PUT /api/admin/articles/:id/approve
+ * @route   PATCH /api/admin/articles/:id/approve
  * @desc    Approve the article
  * @access  Admin
  */
-router.put("/articles/:id/approve", 
+router.patch("/articles/:id/approve", 
   auth(["admin"]), 
   approveArticle
 );
 /**
- * @route   DELETE /api/admin/articles/:id
- * @desc    Register a new user
- * @access  Public
+ * @route   REJECT /api/admin/articles/:id/reject
+ * @desc    Reject an article as admin (This case the user cannot see the article anymore, only admins)
+ * @access  Admin
  */
-router.delete("/articles/:id", 
+router.patch("/articles/:id/reject", 
   auth(["admin"]), 
   rejectArticle
 );

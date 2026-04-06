@@ -7,6 +7,7 @@ import {
     getArticleById,
     createArticle,
     hideArticle,
+    getArticleByIdAsWriterOrAdmin,
 } from "../controllers/articleController.js";
 
 import { createArticleValidator } from "../validators/articleValidator.js";
@@ -37,9 +38,22 @@ router.get("/myArticles",
 /**
  * @route   GET /api/articles/:id
  * @desc    Get single article by ID
- * @access  Public (only if approved - checked in controller)
+ * @access  Public
  */
-router.get("/:id", getArticleById);
+router.get("/:id",
+    getArticleById
+);
+
+/**
+ * @route   GET /api/articles/my/:id
+ * @desc    Get single article by ID
+ * @access  Writer or ADMIN
+ */
+router.get("/my/:id",
+    auth(),
+    getArticleByIdAsWriterOrAdmin
+);
+
 
 /**
  * @route   POST /api/articles/create

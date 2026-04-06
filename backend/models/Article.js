@@ -33,7 +33,7 @@ const ArticleSchema = new mongoose.Schema(
         },
         status: { 
             type: String, 
-            enum: ["pending", "approved", "hidden"], 
+            enum: ["pending", "approved", "hidden", "rejected"], 
             default: "pending"
         },
         createdAt: {

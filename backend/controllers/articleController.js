@@ -11,6 +11,10 @@ const getApprovedArticles = async (req, res) => {
         const articles = await Article.find({ status: "approved" })
         .sort({ createdAt: -1 }); // Sort by newest first
 
+        // If there are not approved articles we check it by the length of the array
+        if (Array.isArray(articles) && articles.length < 1) {
+            return res.status(404).json({message: "No Approved articles found"})
+        }
         // Send articles as JSON response
         res.json(articles);
     } catch (err) {
@@ -64,7 +68,7 @@ const getArticleById = async (req, res) => {
 
         // Optional: only allow viewing approved articles
         if (article.status !== "approved") {
-            return res.status(403).json({ error: "Article not approved yet" });
+            return res.status(403).json({ error: "Article hidden or not approved yet" });
         }
 
         res.json(article);
@@ -72,6 +76,39 @@ const getArticleById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+/**
+ * @desc    Get a single article by ID
+ * @route   GET /api/articles/:id
+ * @access  Public
+ */
+const getArticleByIdAsWriterOrAdmin = async (req, res) => {
+    try {
+        const articleId = req.params.id;
+        const userId = req.user.id;
+
+        // Find article by ID
+        const article = await Article.findById(articleId);
+
+        // If article does not exist
+        if (!article) {
+            return res.status(404).json({ error: "Article not found" });
+        }
+
+        // Optional: only allow viewing approved articles
+        if (article.author.toString() !== userId &&
+            req.user.role !== "admin" &&
+            req.user.role !== "owner"
+        ) {
+            return res.status(403).json({ error: "Not authorized" });
+        }
+
+        res.json(article);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 
 /**
  * @desc    Create a new article (sent for approval)
@@ -144,4 +181,4 @@ const hideArticle = async (req, res) => {
     }
 };
 
-export {getApprovedArticles, getMyArticles, getArticleById, createArticle, hideArticle}
+export {getApprovedArticles, getMyArticles, getArticleById, getArticleByIdAsWriterOrAdmin, createArticle, hideArticle}

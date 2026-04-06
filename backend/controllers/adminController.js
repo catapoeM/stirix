@@ -66,7 +66,10 @@ const getPendingArticles = async (req, res) => {
         // Find all articles with status "pending"
         const articles = await Article.find({ status: "pending" })
         .sort({ createdAt: -1 }); // newest first
-
+        // If there are not pending articles we check it by the length of the array
+        if (Array.isArray(articles) && articles.length < 1) {
+            return res.status(404).json({message: "No pending articles found"})
+        }
         // Return the list of pending articles
         res.json(articles);
     } catch (err) {
@@ -106,8 +109,7 @@ const approveArticle = async (req, res) => {
         // Find article by ID and update its status to "approved"
         const article = await Article.findByIdAndUpdate(
             articleId,
-            { status: "approved" },
-            { new: true } // return updated document
+            { status: "approved" }
         );
 
         // If article does not exist
@@ -116,8 +118,7 @@ const approveArticle = async (req, res) => {
         }
 
         res.json({
-            message: "Article approved successfully",
-            article,
+            message: "Article approved successfully"
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -134,15 +135,18 @@ const rejectArticle = async (req, res) => {
         const articleId = req.params.id;
 
         // Find and delete the article
-        const article = await Article.findByIdAndDelete(articleId);
+        const article = await Article.findByIdAndUpdate(
+            articleId,
+            { status: "rejected" }
+        );
 
         // If article does not exist
         if (!article) {
-        return res.status(404).json({ error: "Article not found" });
+            return res.status(404).json({ error: "Article not found" });
         }
 
         res.json({
-        message: "Article rejected and deleted",
+            message: "Article rejected and not visible for the user anymore (only by admins)",
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
