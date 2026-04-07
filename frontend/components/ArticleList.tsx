@@ -1,23 +1,20 @@
 import ArticleCard from "./ArticleCard";
 
-const dummyData = [
-  {
-    title: "Romania wins important match",
-    image: "https://via.placeholder.com/400",
-    content: "Romania had a great performance...",
-  },
-  {
-    title: "Superliga latest updates",
-    image: "https://via.placeholder.com/400",
-    content: "Latest news from Superliga...",
-  },
-];
+type Article = {
+  _id: string;
+  title: string;
+  content: string;
+  image: string;
+};
 
-const ArticleList = () => {
+const ArticleList = ({articles}: {articles: Article[]}) => {
+  if (!articles || articles.length === 0) {
+    return <p>No articles found.</p>
+  }
   return (
     <div>
-      {dummyData.map((article, index) => (
-        <ArticleCard key={index} {...article} />
+      {articles.map((article) => (
+        <ArticleCard key={article._id} {...article} />
       ))}
     </div>
   );

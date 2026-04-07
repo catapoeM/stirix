@@ -7,8 +7,18 @@ import Article from "../models/Article.js";
  */
 const getApprovedArticles = async (req, res) => {
     try {
+        // get articles by category
+        const { category } = req.query;
+
+        const filter = {
+            status: "approved"
+        }
+
+        if (category && category !== "all") {
+            filter.category = category;
+        }
         // Find all articles with status "approved"
-        const articles = await Article.find({ status: "approved" })
+        const articles = await Article.find(filter)
         .sort({ createdAt: -1 }); // Sort by newest first
 
         // If there are not approved articles we check it by the length of the array

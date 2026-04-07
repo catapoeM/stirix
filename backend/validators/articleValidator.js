@@ -29,7 +29,7 @@ const createArticleValidator = [
   body("category")
     .notEmpty()
     .withMessage("Category is required")
-    .isIn(["superliga", "romania", "europa", "international"])
+    .isIn(["superliga", "romania", "international", "all"])
     .withMessage("Invalid category"),
 
   // 🔹 OPTIONAL: SUMMARY (nice for preview cards)

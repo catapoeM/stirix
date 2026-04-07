@@ -1,18 +1,23 @@
+import Link from "next/link";
+
 type Props = {
+    _id?: string;
     title: string;
     image: string;
     content: string;
 }
 
-const ArticleCard = ({ title, image, content }: Props) => {
+const ArticleCard = ({ _id, title, image, content }: Props) => {
     return (
-        <div style={{marginBottom: "20px"}}>
-            <img src={image} alt={title} style={{width: "100%"}} />
+        <Link href={`/article/${_id || ""}`}>
+            <div style={{marginBottom: "20px", cursor: "pointer"}}>
+                <img src={image} alt={title} style={{width: "100%", borderRadius: "8px"}} />
 
-            <h3>{title}</h3>
+                <h3>{title}</h3>
 
-            <p>{content.slice(0, 80)}...</p>
-        </div>
+                <p>{content.slice(0, 80)}...</p>
+            </div>
+        </Link>
     )
 }
 

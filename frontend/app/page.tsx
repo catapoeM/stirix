@@ -1,13 +1,17 @@
-"use client";
+import { fetchArticlesByCategory } from "@/lib/api";
+import ArticleList from "@/components/ArticleList";
+import CategoryTabs from "@/components/CategoryTabs";
 
-import ArticleList from "../components/ArticleList";
-import CategoryTabs from "../components/CategoryTabs";
+const HomePage = async () => {
+  const articles = await fetchArticlesByCategory("all");
 
-const HomePage = () => {
   return (
-    <main>
+    <main style={{ padding: "10px" }}>
       <CategoryTabs />
-      <ArticleList />
+
+      <h2>Latest News</h2>
+
+      <ArticleList articles={articles} />
     </main>
   );
 }

@@ -16,6 +16,7 @@ const ArticleSchema = new mongoose.Schema(
         },
         category: {
             type: String,  // football
+            enum: ["superliga", "romania", "international", "all"], 
             required: true
         },
         imageUrl: {
