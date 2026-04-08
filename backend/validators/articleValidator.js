@@ -29,14 +29,14 @@ const createArticleValidator = [
   body("category")
     .notEmpty()
     .withMessage("Category is required")
-    .isIn(["superliga", "romania", "international", "all"])
+    .isIn(["superliga", "romania", "international"])
     .withMessage("Invalid category"),
 
   // 🔹 OPTIONAL: SUMMARY (nice for preview cards)
   body("summary")
     .optional()
-    .isLength({ min: 50, max: 300 })
-    .withMessage("Summary cannot exceed 300 characters")
+    .isLength({ min: 100, max: 300 })
+    .withMessage("Summary cannot exceed 300 characters and minimum of 100")
     .trim()
     .escape(),
 ];

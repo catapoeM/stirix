@@ -16,7 +16,7 @@ const ArticleSchema = new mongoose.Schema(
         },
         category: {
             type: String,  // football
-            enum: ["superliga", "romania", "international", "all"], 
+            enum: ["superliga", "romania", "international"], 
             required: true
         },
         imageUrl: {
@@ -25,7 +25,7 @@ const ArticleSchema = new mongoose.Schema(
         summary: {
             type: String, 
             required: false, 
-            minlength: 150, 
+            minlength: 100, 
             maxlength: 300
         },
         author: {

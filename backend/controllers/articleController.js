@@ -127,7 +127,7 @@ const getArticleByIdAsWriterOrAdmin = async (req, res) => {
  */
 const createArticle = async (req, res) => {
     try {
-        const { title, content, category } = req.body;
+        const { title, content, category, summary } = req.body;
 
         // Basic validation (important!)
         if (!title || !content) {
@@ -139,6 +139,7 @@ const createArticle = async (req, res) => {
             title,
             content,
             category,
+            summary,
             author: req.user.id, // comes from auth middleware
             status: "pending",
         });

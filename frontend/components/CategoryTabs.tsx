@@ -16,8 +16,8 @@ const CategoryTabs = () => {
     <div style={{ display: "flex", gap: "10px", overflowX: "auto" }}>
       {categories.map((cat) => (
         <button 
-        key={cat.slug}
-        onClick={() => router.push(`/category/${cat.slug}`)}
+          key={cat.slug}
+          onClick={() => router.push(`/category/${cat.slug}`)}
         >
           {cat.label}
         </button>
