@@ -61,4 +61,58 @@ const createArticle = async (data: any, token: string) => {
   }
 }
 
-export {fetchArticlesByCategory, fetchArticleById, createArticle}
+const loginUser = async (data: any) => {
+    try {
+        const res = await fetch(`${BASE_URL}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            return { success: false, message: result.message || "Login failed" };
+        }
+
+        return { 
+            success: true, 
+            data: result 
+        }
+    } catch {
+        return {
+            success: false, message: "Network error"
+        }
+    }
+}
+
+const registerUser = async (data: any) => {
+    try {
+        const res = await fetch(`${BASE_URL}/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            return { success: false, message: result.message || "Register failed" };
+        }
+
+        return { 
+            success: true, 
+            data: result 
+        }
+    } catch {
+        return {
+            success: false, message: "Network error"
+        }
+    }
+}
+
+export {fetchArticlesByCategory, fetchArticleById, createArticle, loginUser, registerUser}

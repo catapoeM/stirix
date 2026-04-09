@@ -1,15 +1,10 @@
-const RootLayout = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+"use client"
+import Header from "@/components/Header";
+const RootLayout = ({ children}: any) => {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: "Arial" }}>
-        <header style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
-          <h1>Stirix</h1>
-        </header>
-
+      <body >
+        <Header/>
         {children}
       </body>
     </html>
