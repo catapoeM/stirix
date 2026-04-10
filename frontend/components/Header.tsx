@@ -3,45 +3,121 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth";
 
-const Header = () => {
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+  List,
+  ListItemText,
+  Button,
+  Box,
+  Typography
+} from "@mui/material";
+import { isLoggedIn } from "@/lib/auth";
+
+import MenuIcon from "@mui/icons-material/Menu"
+import Link from "next/link";
+
+const Header = ({user}: any) => {
     const router = useRouter();
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+    const [open, setOpen] = useState(false);
+
+    const toggleDrawer = (state: any) => () => {
+        setOpen(state);
+    }
 
     useEffect(() => {
         const token = getToken();
         setLoggedIn(!!token)
     }, [])
 
+    const categories = [
+        {label: "Internațional", slug: "international"}, 
+        {label: "Superliga", slug: "superliga"}, 
+        {label: "România", slug: "romania"},
+    ];
+
+    const logOut = () => {
+
+    }
+
     return (
-        <header style={{display: "flex", justifyContent: "space-between", padding: "10px"}}>
+        <>
+            {/* TOP BAR */}
+            <AppBar position="static" sx={{gap: 0}}>
+                <Toolbar sx={{justifyContent: "space-between"}}>
+                    {/*LEFT: LOGO / TITLE */}
+                    <Typography variant="h6" onClick={() => router.push("/")} sx={{cursor: 'pointer'}} >
+                        Stirix
+                    </Typography>
 
-            <h2 onClick={() => router.push("/")} style={{cursor: "pointer"}}>
-                Stirix
-            </h2>
+                    {/** RIGHT: Hamburger */}
+                    <IconButton color="inherit" onClick={toggleDrawer(true)}>
+                        <MenuIcon/>
+                    </IconButton>
+                </Toolbar>
 
-            
-            {!loggedIn ? (
-                <>
-                    <button onClick={() => router.push("/login")}>Login</button>
-                    <button onClick={() => router.push("/register")}>Register</button>
-                </>
-                ) : (
-                <>
-                    <button onClick={() => router.push("/create")}>+ Create</button>
-                    <button 
-                        onClick={() => {
-                            localStorage.removeItem("token")
-                            router.refresh();
-                        }}
-                    >
-                        Logout
-                    </button>      
-                </>
-                )
+                {/* Category Buttons */}
+                <Box 
+                    sx={{
+                        display: "flex",
+                        overflowX: "auto",
+                        justifyContent: "center",
+                        whiteSpace: 'nowrap',  // Prevent buttons from wrapping
+                        padding: 1,
+                        gap: 2
+                    }}
+                >
+                    {categories.map((cat) => (
+                        <Button 
+                            size="small" 
+                            variant="outlined" 
+                            color="inherit"
+                            key={cat.slug}
+                            onClick={() => router.push(`/category/${cat.slug}`)}
+                        >
+                            {cat.label}
+                        </Button>
+                    ))}
+                </Box>
+            </AppBar>
 
-            }
-            
-        </header>
+            {/* DRAWER (Hamburger Menu) */}
+            <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <Box sx={{width: 250}} onClick={toggleDrawer(false)}>
+                    <List>
+
+                        {!user ? (
+                            <>
+                                <Button type="button" component={Link} href="/login">
+                                    <ListItemText primary="Autentificare"/>
+                                </Button>
+
+                                <Button type="button" component={Link} href="/register">
+                                    <ListItemText primary="Înregistrare" />
+                                </Button>
+                            </>
+                        )   :   (
+                            <>
+                                <Button type="button" component={Link} href="/articles/create">
+                                    <ListItemText primary="+ Create Article" />
+                                </Button>
+                                
+                                <Button type="button" component={Link} href="/myarticles">
+                                    <ListItemText primary="My Articles" />
+                                </Button>
+
+                                <Button type="button" onClick={() => logOut()}>
+                                    <ListItemText primary="Logout" />
+                                </Button>
+                            </>
+                        )}
+                    </List>
+                </Box>
+            </Drawer>
+        </>   
     )
 }
 
