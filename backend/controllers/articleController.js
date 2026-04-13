@@ -1,4 +1,5 @@
 import Article from "../models/Article.js";
+import User from "../models/User.js";
 
 /**
  * @desc    Get all approved articles
@@ -76,12 +77,18 @@ const getArticleById = async (req, res) => {
             return res.status(404).json({ error: "Article not found" });
         }
 
+        const author = await User.findById(article.author)
+
         // Optional: only allow viewing approved articles
         if (article.status !== "approved") {
             return res.status(403).json({ error: "Article hidden or not approved yet" });
         }
+        const articleData = {article: article}
+        if (author) {
+            articleData.authorName = author.username;
+        }
 
-        res.json(article);
+        res.json(articleData);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
