@@ -1,9 +1,11 @@
+"use client"
 import ArticleCard from "./ArticleCard";
 
 type Article = {
   _id: string;
   title: string;
   content: string;
+  summary: string;
   image: string;
 };
 
