@@ -1,6 +1,7 @@
 import User from "../models/User.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { generateAccessToken, generateRefreshToken } from "../utils/tokens.js"
 
 /**
  * @desc Register user
@@ -58,24 +59,63 @@ const login = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         } 
 
-        const token = jwt.sign(
-        { 
-            id: user._id, 
-            role: user.role 
-        },
-        process.env.JWT_SECRET,
-        {expiresIn: "7d"}
-        );
+        const accessToken = generateAccessToken(user);
 
-        res.json({
-            token,
-            role: user.role,
-            username: user.username,
+        const refreshToken = generateRefreshToken(user);
+
+        //  store refresh token in cookie
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.PRODUCTION,
+            sameSite: "strict",
         });
+
+        res.json({accessToken});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-export {register, login}
+const refresh = (req, res) => {
+    const token = req.cookies.refreshToken;
+
+    if (!token) return res.sendStatus(401);
+
+    if (!refreshTokens.includes(token)) return res.sendStatus(403);
+
+    try {
+        const payload = jwt.verify(token, process.env.REFRESH_SECRET);
+
+        // rotate refresh token
+        refreshTokens = refreshTokens.filter((t) => t !== token);
+
+        const newRefreshToken = generateRefreshToken({ id: payload.sub });
+        refreshTokens.push(newRefreshToken);
+
+        const newAccessToken = generateAccessToken({ id: payload.sub });
+
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.PRODUCTION,
+            sameSite: "strict",
+        });
+
+        res.json({ accessToken: newAccessToken });
+    } catch (err) {
+        return res.sendStatus(403);
+    }
+}
+
+const logout = (req, res) => {
+    const token = req.cookies.refreshToken;
+
+    refreshTokens = refreshTokens.filter((t) => t !== token);
+
+    res.clearCookie("refreshToken");
+
+    res.sendStatus(204);
+
+}
+
+export {register, login, logout, refresh}
 

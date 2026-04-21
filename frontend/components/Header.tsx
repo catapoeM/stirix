@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getToken } from "@/lib/auth";
 
 import {
   AppBar,
@@ -14,14 +13,13 @@ import {
   Box,
   Typography
 } from "@mui/material";
-import { isLoggedIn } from "@/lib/auth";
 
 import MenuIcon from "@mui/icons-material/Menu"
 import Link from "next/link";
 
-const Header = ({user}: any) => {
+const Header = () => {
     const router = useRouter();
-    const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+    const [user, setUser] = useState<any>(null);
     const [open, setOpen] = useState(false);
 
     const toggleDrawer = (state: any) => () => {
@@ -29,8 +27,9 @@ const Header = ({user}: any) => {
     }
 
     useEffect(() => {
-        const token = getToken();
-        setLoggedIn(!!token)
+        fetch("/lib/auth")
+        .then(res => res.json())
+        .then(data => setUser(data.user))
     }, [])
 
     const categories = [

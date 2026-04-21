@@ -31,15 +31,11 @@ const LoginPage = () => {
         e.preventDefault();
 
         const res = await loginUser(form);
-
-        if (!res.success) {
+        if (res.error) {
             setType("error");
-            setMessage(res.message);
+            setMessage(res.error);
             return
         }
-
-        // save token
-        localStorage.setItem("token", res.data.token)
 
         setType("success");
         setMessage("Login successfull!");
@@ -64,7 +60,7 @@ const LoginPage = () => {
                 gap: 2
             }}
             >
-            <Typography variant="h5">Autentificare</Typography>
+            <Typography variant="h5">Logare</Typography>
 
             <Box
                 component="form"

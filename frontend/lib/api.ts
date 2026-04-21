@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getAccessToken, setAccessToken } from "./auth"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 // Get all or by category
@@ -63,29 +64,33 @@ const createArticle = async (data: any, token: string) => {
 
 const loginUser = async (data: any) => {
     try {
+        
         const res = await fetch(`${BASE_URL}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include", // So browser accepts cookies
             body: JSON.stringify(data),
         })
 
-        const result = await res.json();
+        if (!res) {
+            return console.log("Login failed");
+        } 
 
-        if (!res.ok) {
-            return { success: false, message: result.message || "Login failed" };
-        }
-
-        return { 
-            success: true, 
-            data: result 
-        }
-    } catch {
-        return {
-            success: false, message: "Network error"
-        }
+        return res.json();
+    } catch (err) { 
+        return new Error ("Login error + message " + err)
     }
+}
+
+const logout = async () => {
+    await fetch(`${BASE_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+    })
+
+    setAccessToken(null)
 }
 
 const registerUser = async (data: any) => {
@@ -115,4 +120,4 @@ const registerUser = async (data: any) => {
     }
 }
 
-export {fetchArticlesByCategory, fetchArticleById, createArticle, loginUser, registerUser}
+export {fetchArticlesByCategory, fetchArticleById, createArticle, loginUser, registerUser, logout}

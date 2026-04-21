@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login } from "../controllers/authController.js";
+import { register, login, refresh, logout } from "../controllers/authController.js";
 import validateRequest from "../middleware/validateRequest.js";
 import { registerValidator, loginValidator } from "../validators/authValidator.js";
 import { authLimiter } from "../middleware/authMiddleware.js";
@@ -28,5 +28,15 @@ router.post("/login",
     validateRequest,
     login
 );
+
+// refresh route
+router.post("/refresh",
+    refresh
+)
+
+// logout route
+router.post("/logout",
+    logout
+)
 
 export default router;
