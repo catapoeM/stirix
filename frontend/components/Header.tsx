@@ -1,6 +1,8 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 
 import {
   AppBar,
@@ -45,13 +47,24 @@ const Header = () => {
     return (
         <>
             {/* TOP BAR */}
-            <AppBar position="static" sx={{gap: 0}}>
+            <AppBar position="static">
                 <Toolbar sx={{justifyContent: "space-between"}}>
                     {/*LEFT: LOGO / TITLE */}
-                    <Typography variant="h6" onClick={() => router.push("/")} sx={{cursor: 'pointer'}} >
-                        Stirix
-                    </Typography>
-
+                    <Link href="/">
+                        <Box sx={{ height: 40, display: "flex", alignItems: "center" }}>
+                            <Image
+                                src="/frontend/public/stirix_logo_s.png"
+                                alt="Logo"
+                                width={120}
+                                height={86}
+                                style={{
+                                height: "100%",
+                                width: "auto",
+                                objectFit: "contain",
+                                }}
+                            />
+                        </Box>
+                    </Link>
                     {/** RIGHT: Hamburger */}
                     <IconButton color="inherit" onClick={toggleDrawer(true)}>
                         <MenuIcon/>
