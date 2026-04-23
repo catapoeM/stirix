@@ -47,28 +47,48 @@ const Header = () => {
     return (
         <>
             {/* TOP BAR */}
-            <AppBar position="static">
-                <Toolbar sx={{justifyContent: "space-between"}}>
-                    {/*LEFT: LOGO / TITLE */}
-                    <Link href="/">
-                        <Box sx={{ height: 40, display: "flex", alignItems: "center" }}>
+            <AppBar position="static" sx={{bgcolor: "#ffffff", color: "#002B7F"}}>
+                 {/* TOP BAR */}
+                <Toolbar 
+                    sx={{ 
+                        display: "grid",
+                        gridTemplateColumns: "1fr auto 1fr",
+                        alignItems: "center"
+                    }}
+                >
+                    {/* LEFT (empty space for balance) */}
+                    <Box sx={{ flex: 1 }} />
+
+                    {/* LOGO CENTER */}
+                    <Link href="/" style={{display: "flex"}}>
+                        <Box 
+                            sx={{
+                                position: "absolute",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                display: "flex",
+                                alignItems: "center",
+                                height: 7,
+                            }}
+                        >
                             <Image
-                                src="/frontend/public/stirix_logo_s.png"
+                                src="/logo_stirix_s.png"
                                 alt="Logo"
-                                width={120}
-                                height={86}
-                                style={{
-                                height: "100%",
-                                width: "auto",
-                                objectFit: "contain",
-                                }}
+                                width={140}
+                                height={100}
+                                style={{ height: "85px", width: "auto", objectFit: "contain" }}
                             />
                         </Box>
                     </Link>
+
                     {/** RIGHT: Hamburger */}
-                    <IconButton color="inherit" onClick={toggleDrawer(true)}>
-                        <MenuIcon/>
-                    </IconButton>
+                    <Box sx={{display: "flex", justifyContent: "flex-end"}}>
+                        <IconButton sx={{
+                            color: (theme) => theme.palette.primary.main
+                        }} onClick={toggleDrawer(true)}>
+                            <MenuIcon fontSize="large"/>
+                        </IconButton>
+                    </Box>
                 </Toolbar>
 
                 {/* Category Buttons */}
@@ -77,9 +97,11 @@ const Header = () => {
                         display: "flex",
                         overflowX: "auto",
                         justifyContent: "center",
-                        whiteSpace: 'nowrap',  // Prevent buttons from wrapping
                         padding: 1,
-                        gap: 2
+                        gap: 2,
+                        px: 2,
+                        pb: 2,
+                        flexWrap: "nowrap"
                     }}
                 >
                     {categories.map((cat) => (
