@@ -12,7 +12,7 @@ const RootLayout = ({ children }: any) => {
           {/* HEADER */}
           <Header />
           {/* MAIN CONTENT */}
-          <Container maxWidth="md" sx={{ flex: 1, py: 2 }}>
+          <Container sx={{ maxWidth: 1200, mx: "auto", px: 2 }}>
             {children}
           </Container>
           </Box>

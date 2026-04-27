@@ -9,17 +9,14 @@ const ArticlePage = async ( { params }: any) => {
 
     const articleData = await fetchArticleById(id);
     const newDateFormat = formatDateCustom(articleData.article.createdAt, 'yyyy-MM-dd', 'HH:mm')
-    console.log(newDateFormat, ' ndf')
     if (!articleData.article) {
         return notFound(); // 404 page return if not found
     }
-    console.log(articleData, 'article data')
     const paragraphs = articleData.article.content.split("\n");
     const articleCategoryUpperCase = articleData.article.category.toUpperCase()
 
     return (
-        <Container maxWidth="md">
-            <Box sx={{py: 3}}>
+        <Container sx={{ maxWidth: 1200, mx: "auto", px: 2 }}>
                 {/* Category */}
                 {articleData.article.category && (
                 <Typography
@@ -72,7 +69,6 @@ const ArticlePage = async ( { params }: any) => {
                     {p}
                 </Typography>
                 ))}
-            </Box>
         </Container>
     )
 }

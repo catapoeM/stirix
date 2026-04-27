@@ -28,12 +28,6 @@ const Header = () => {
         setOpen(state);
     }
 
-    useEffect(() => {
-        fetch("/lib/auth")
-        .then(res => res.json())
-        .then(data => setUser(data.user))
-    }, [])
-
     const categories = [
         {label: "Internațional", slug: "international"}, 
         {label: "Superliga", slug: "superliga"}, 
@@ -60,7 +54,7 @@ const Header = () => {
                     <Box sx={{ flex: 1 }} />
 
                     {/* LOGO CENTER */}
-                    <Link href="/" style={{display: "flex"}}>
+                    <Link href="/category/all" style={{display: "flex"}}>
                         <Box 
                             sx={{
                                 position: "absolute",

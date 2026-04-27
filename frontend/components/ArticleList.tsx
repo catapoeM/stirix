@@ -1,6 +1,6 @@
 "use client"
 import ArticleCard from "./ArticleCard";
-
+import {Stack} from "@mui/material"
 type Article = {
   _id: string;
   title: string;
@@ -14,11 +14,11 @@ const ArticleList = ({articles}: {articles: Article[]}) => {
     return <p>No articles found.</p>
   }
   return (
-    <div>
+    <Stack>
       {articles.map((article) => (
         <ArticleCard key={article._id} {...article} />
       ))}
-    </div>
+    </Stack>
   );
 }
 

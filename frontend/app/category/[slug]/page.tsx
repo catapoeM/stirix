@@ -18,7 +18,7 @@ const CategoryPage = async({ params }: any) => {
   }
   
     return (
-    <main style={{ padding: "1px" }}>
+    <main>
 
       <h2 style={{ textTransform: "capitalize" }}>{slug}</h2>
 
